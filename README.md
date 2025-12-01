@@ -1,4 +1,4 @@
-# Sistema EcoTech Solutions 🌿
+# Sistema EcoTech Solutions 
 
 Sistema de gestión de Recursos Humanos (Empleados, Departamentos y Proyectos) desarrollado en **Python** y **MySQL**.
 
@@ -26,3 +26,4 @@ El proyecto sigue una **Arquitectura en Capas** (Presentación, Aplicación, Dom
 
 ## 👤 Autor
 * **Fabian Arias** - *Eva2*
+
