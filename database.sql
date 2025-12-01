@@ -1,15 +1,11 @@
--- 1. Creación de la Base de Datos
+-- Creación de la Base de Datos
 CREATE DATABASE IF NOT EXISTS ecotech_db;
 USE ecotech_db;
 
--- ==========================================
--- 2. Creación de Tablas Principales
--- ==========================================
+
+-- Tablas Principales
 
 -- Tabla DEPARTAMENTOS
--- Atributos según UML: id, nombre. 
--- El campo 'gerente_id' se deja NULL inicialmente para evitar conflictos de creación
--- (problema del huevo y la gallina con la tabla Empleados).
 CREATE TABLE IF NOT EXISTS departamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -17,7 +13,6 @@ CREATE TABLE IF NOT EXISTS departamentos (
 ) ENGINE=InnoDB;
 
 -- Tabla EMPLEADOS
--- Atributos según UML: id, nombre, direccion, telefono, correo, fecha_contrato, salario, departamento.
 CREATE TABLE IF NOT EXISTS empleados (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -32,16 +27,12 @@ CREATE TABLE IF NOT EXISTS empleados (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- RELACIÓN CIRCULAR: Departamento -> tiene un -> Gerente (Empleado)
--- Ahora que la tabla 'empleados' existe, conectamos la llave foránea del gerente.
 ALTER TABLE departamentos
 ADD CONSTRAINT fk_departamento_gerente
 FOREIGN KEY (gerente_id) REFERENCES empleados(id)
 ON DELETE SET NULL;
 
 -- Tabla PROYECTOS
--- Atributos según UML: id, nombre, descripcion, fecha_inicio.
--- Incluye 'director_id' para relacionarlo con un Empleado jefe del proyecto.
 CREATE TABLE IF NOT EXISTS proyectos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -53,12 +44,7 @@ CREATE TABLE IF NOT EXISTS proyectos (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- ==========================================
--- 3. Tablas de Relación (Muchos a Muchos)
--- ==========================================
-
 -- Tabla PROYECTO_PARTICIPANTES
--- Resuelve la relación de que un proyecto tiene muchos empleados participantes (1..*)
 CREATE TABLE IF NOT EXISTS proyecto_participantes (
     proyecto_id INT NOT NULL,
     empleado_id INT NOT NULL,
@@ -72,7 +58,6 @@ CREATE TABLE IF NOT EXISTS proyecto_participantes (
 ) ENGINE=InnoDB;
 
 -- Tabla REGISTRO_TIEMPO
--- Requisito funcional para registrar las horas trabajadas por empleado en un proyecto.
 CREATE TABLE IF NOT EXISTS registro_tiempo (
     id INT AUTO_INCREMENT PRIMARY KEY,
     empleado_id INT NOT NULL,

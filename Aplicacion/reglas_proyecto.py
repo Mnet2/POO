@@ -7,14 +7,12 @@ class ReglasProyecto:
         self.dao = ProyectoDAO()
 
     def crear_proyecto(self, nombre, descripcion, fecha_inicio, director_id):
-        # 1. Validaciones
         if not nombre:
             return False, "El proyecto debe tener un nombre."
         
         if not director_id:
             return False, "El proyecto debe tener un director asignado."
 
-        # 2. Crear objeto
         nuevo_proy = Proyecto(
             nombre=nombre, 
             descripcion=descripcion, 
@@ -22,7 +20,6 @@ class ReglasProyecto:
             director_id=director_id
         )
 
-        # 3. Guardar
         if self.dao.agregar(nuevo_proy):
             return True, f"Proyecto '{nombre}' creado con éxito."
         else:

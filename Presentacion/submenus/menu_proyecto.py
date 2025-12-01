@@ -66,7 +66,7 @@ class MenuProyecto(MenuBase):
             print(f"{'ID':<5} | {'Nombre':<20} | {'Inicio':<12} | {'ID Director':<10}")
             print("-" * 55)
             for p in proyectos:
-                # CORRECCIÓN: Manejo de valores None (Nulos) para evitar errores
+                
                 dir_id = p.director_id if p.director_id is not None else "N/A"
                 fecha = str(p.fecha_inicio) if p.fecha_inicio else "N/A"
                 

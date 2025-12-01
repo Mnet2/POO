@@ -6,7 +6,6 @@ from datetime import datetime
 class MenuEmpleado(MenuBase):
     def __init__(self):
         super().__init__("Gestión de Empleados")
-        # Aquí conectamos con TU lógica de negocio
         self.reglas = ReglasEmpleado()
 
     def mostrar_opciones(self):
@@ -31,7 +30,7 @@ class MenuEmpleado(MenuBase):
     def registrar_empleado(self):
         print("\n--- Nuevo Empleado ---")
         
-        # 1. Nombre (Validamos que tenga algo de texto)
+        # 1. Nombre 
         nombre = leer_texto("Nombre: ", 3)
         
         # 2. Dirección y Teléfono
@@ -43,26 +42,26 @@ class MenuEmpleado(MenuBase):
                 break
             print("❌ Error: El teléfono debe contener exactamente 9 números (ej: 912345678).")
         
-        # 3. Correo con validación INMEDIATA
+        # 3. Correo 
         while True:
             correo = input("Correo: ").strip()
-            if "@" in correo and "." in correo: # Validación básica visual
+            if "@" in correo and "." in correo: 
                 break
             print("❌ Error: El correo debe contener '@' y un punto (ej: usuario@mail.com). Intente de nuevo.")
 
-        # 4. Salario con validación INMEDIATA (Positivo)
+        # 4. Salario 
         while True:
             salario = leer_entero("Salario: ")
             if salario >= 0:
                 break
             print("❌ Error: El salario no puede ser negativo.")
         
-        # 5. Fecha (Validación de formato)
+        # 5. Fecha 
         while True:
             fecha_str = input("Fecha Contrato (YYYY-MM-DD): ").strip()
             try:
                 datetime.strptime(fecha_str, '%Y-%m-%d')
-                break # Si pasa la línea anterior, el formato es correcto
+                break 
             except ValueError:
                 print("❌ Error: Formato incorrecto. Use Año-Mes-Dia (ej: 2023-10-25).")
 
@@ -70,8 +69,7 @@ class MenuEmpleado(MenuBase):
         depto_id = leer_entero("ID del Departamento (0 si no tiene): ")
         if depto_id == 0: depto_id = None
 
-        # --- LLAMADA AL BACKEND ---
-        # Ahora estamos seguros de que los datos básicos van bien formados
+        
         exito, mensaje = self.reglas.crear_empleado(
             nombre, direccion, telefono, correo, fecha_str, salario, depto_id
         )
@@ -97,7 +95,7 @@ class MenuEmpleado(MenuBase):
         empleado = self.reglas.buscar_por_id(id_emp)
         if empleado:
             print("\n✅ Empleado Encontrado:")
-            print(empleado) # Usa el __str__ que definiste en dominio
+            print(empleado) 
         else:
             print("❌ Empleado no encontrado.")
 

@@ -10,7 +10,6 @@ class ReglasEmpleado:
         Valida los datos y, si todo está bien, crea el objeto y llama al DAO.
         Retorna: (Exito: bool, Mensaje: str)
         """
-        # 1. Validaciones de Reglas de Negocio
         if not nombre or len(nombre) < 3:
             return False, "El nombre debe tener al menos 3 caracteres."
         
@@ -20,7 +19,6 @@ class ReglasEmpleado:
         if salario < 0:
             return False, "El salario no puede ser negativo."
 
-        # 2. Crear el objeto Empleado
         nuevo_empleado = Empleado(
             nombre=nombre,
             direccion=direccion,
@@ -31,7 +29,6 @@ class ReglasEmpleado:
             departamento_id=departamento_id
         )
 
-        # 3. Llamar a la capa de persistencia
         if self.dao.agregar(nuevo_empleado):
             return True, f"Empleado {nombre} registrado con éxito (ID: {nuevo_empleado.id})."
         else:

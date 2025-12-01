@@ -40,7 +40,6 @@ class ProyectoDAO:
                 cursor.execute(sql)
                 registros = cursor.fetchall()
                 for fila in registros:
-                    # fila: id, nombre, descripcion, fecha_inicio, director_id
                     proy = Proyecto(fila[0], fila[1], fila[2], fila[3], fila[4])
                     lista.append(proy)
             except Exception as e:
@@ -69,7 +68,6 @@ class ProyectoDAO:
                 conexion_obj.desconectar()
         return resultado
     
-    # --- MÉTODOS ESPECIALES PARA LA RELACIÓN MUCHOS A MUCHOS ---
 
     def asignar_participante(self, proyecto_id, empleado_id):
         """Agrega un empleado a la lista de participantes de un proyecto."""
@@ -92,7 +90,6 @@ class ProyectoDAO:
 
     def obtener_participantes(self, proyecto_id):
         """Devuelve una lista de objetos Empleado que están en un proyecto."""
-        # Esta consulta une (JOIN) la tabla intermedia con la tabla empleados
         sql = """
             SELECT e.* FROM empleados e
             INNER JOIN proyecto_participantes pp ON e.id = pp.empleado_id

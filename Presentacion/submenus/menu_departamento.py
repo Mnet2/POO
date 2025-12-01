@@ -27,7 +27,6 @@ class MenuDepartamento(MenuBase):
         print("\n--- Nuevo Departamento ---")
         nombre = leer_texto("Nombre del Departamento: ", 2)
         
-        # Opcional: Asignar gerente al crear
         gerente_id = leer_entero("ID del Gerente (0 si no tiene): ")
         if gerente_id == 0: gerente_id = None
 
@@ -47,7 +46,6 @@ class MenuDepartamento(MenuBase):
             print(f"{'ID':<5} | {'Nombre':<30} | {'ID Gerente':<10}")
             print("-" * 50)
             for d in deptos:
-                # Manejo de None para gerente_id
                 id_gerente = d.gerente_id if d.gerente_id is not None else "Sin asignar"
                 print(f"{d.id:<5} | {d.nombre:<30} | {id_gerente:<10}")
 

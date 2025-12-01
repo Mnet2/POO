@@ -2,7 +2,6 @@ from datetime import date
 
 class Empleado:
     def __init__(self, id_emp=None, nombre="", direccion="", telefono="", correo="", fecha_contrato=None, salario=0, departamento_id=None):
-        # El ID es None por defecto porque la base de datos lo genera automáticamente
         self._id = id_emp
         self._nombre = nombre
         self._direccion = direccion
@@ -12,7 +11,6 @@ class Empleado:
         self._salario = salario
         self._departamento_id = departamento_id
 
-    # Getters y Setters (Encapsulamiento)
     @property
     def id(self):
         return self._id
@@ -67,7 +65,6 @@ class Empleado:
     
     @salario.setter
     def salario(self, value):
-        # Validación básica: el salario no debería ser negativo
         if value >= 0:
             self._salario = value
         else:

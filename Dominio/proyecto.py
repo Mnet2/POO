@@ -7,7 +7,6 @@ class Proyecto:
         self._descripcion = descripcion
         self._fecha_inicio = fecha_inicio
         self._director_id = director_id
-        # Lista para almacenar los objetos Empleado que participan
         self._participantes = [] 
 
     @property

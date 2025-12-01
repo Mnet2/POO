@@ -11,7 +11,6 @@ class EmpleadoDAO:
             INSERT INTO empleados (nombre, direccion, telefono, correo, fecha_contrato, salario, departamento_id)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        # Usamos tuplas para seguridad (evita SQL Injection)
         valores = (
             empleado.nombre, 
             empleado.direccion, 
@@ -29,9 +28,8 @@ class EmpleadoDAO:
             try:
                 cursor = conn.cursor()
                 cursor.execute(sql, valores)
-                conn.commit() # Importante: Confirma los cambios en la BD
+                conn.commit() 
                 
-                # Opcional: Recuperar el ID generado automáticamente
                 if cursor.lastrowid:
                     empleado.id = cursor.lastrowid
                     
@@ -58,7 +56,6 @@ class EmpleadoDAO:
                 registros = cursor.fetchall()
                 
                 for fila in registros:
-                    # Convertimos cada fila de la tabla en un objeto Python
                     emp = Empleado(
                         id_emp=fila[0],
                         nombre=fila[1],
@@ -113,7 +110,6 @@ class EmpleadoDAO:
                 cursor = conn.cursor()
                 cursor.execute(sql, (id_empleado,))
                 conn.commit()
-                # Verificar si realmente se borró algo (filas afectadas > 0)
                 if cursor.rowcount > 0:
                     exito = True
             except Exception as e:

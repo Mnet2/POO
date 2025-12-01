@@ -23,8 +23,6 @@ class ReglasDepartamento:
         return self.dao.mostrar_todos()
 
     def eliminar_departamento(self, id_depto):
-        # Podrías agregar una validación aquí: ¿Se puede borrar si tiene empleados?
-        # Por ahora lo dejaremos simple.
         if self.dao.eliminar(id_depto):
             return True, "Departamento eliminado."
         else:

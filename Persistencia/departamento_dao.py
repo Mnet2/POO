@@ -37,7 +37,6 @@ class DepartamentoDAO:
                 cursor.execute(sql)
                 registros = cursor.fetchall()
                 for fila in registros:
-                    # fila[0]=id, fila[1]=nombre, fila[2]=gerente_id
                     depto = Departamento(fila[0], fila[1], fila[2])
                     lista.append(depto)
             except Exception as e:
