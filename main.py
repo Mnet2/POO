@@ -1,13 +1,10 @@
 import sys
 import os
-
-# Asegurar ruta de ejecución
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from Presentacion.utilidades import limpiar_pantalla, leer_entero
 from Presentacion.submenus.menu_empleado import MenuEmpleado
 from Presentacion.submenus.menu_departamento import MenuDepartamento
-from Presentacion.submenus.menu_proyecto import MenuProyecto  # ✅ Ahora sí lo importamos
+from Presentacion.submenus.menu_proyecto import MenuProyecto
 
 def main():
     while True:
@@ -32,7 +29,6 @@ def main():
             menu.ejecutar()
             
         elif opcion == 3:
-            # ✅ Ahora funciona el menú de proyectos
             menu = MenuProyecto()
             menu.ejecutar()
 
