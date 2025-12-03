@@ -15,7 +15,7 @@ class UsuarioDAO:
                 cursor.execute(sql, (username,))
                 fila = cursor.fetchone()
                 if fila:
-                    # fila: id, username, password (hash), rol
+                  
                     resultado = Usuario(fila[0], fila[1], fila[2], fila[3])
             except Exception as e:
                 print(f"Error al buscar usuario: {e}")

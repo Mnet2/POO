@@ -1,6 +1,6 @@
 from Aplicacion.reglas_usuario import ReglasUsuario
 from Presentacion.utilidades import limpiar_pantalla, leer_texto
-import getpass # Para ocultar la contraseña al escribir (opcional pero recomendado)
+import getpass
 
 def iniciar_sesion():
     reglas = ReglasUsuario()
@@ -15,7 +15,7 @@ def iniciar_sesion():
         print(f"Intento {intentos + 1} de {max_intentos}")
 
         user = leer_texto("Usuario: ")
-        # getpass oculta lo que escribes, si da problemas en VS Code usa input() normal
+    
         try:
             password = getpass.getpass("Contraseña: ")
         except:
@@ -26,7 +26,7 @@ def iniciar_sesion():
         if exito:
             print(f"\n✅ {mensaje}")
             input("Presione ENTER para ingresar...")
-            return usuario_obj # Retornamos el usuario para saber su rol en el main
+            return usuario_obj 
         else:
             print(f"\n❌ {mensaje}")
             intentos += 1
