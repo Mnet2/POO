@@ -70,3 +70,12 @@ CREATE TABLE IF NOT EXISTS registro_tiempo (
     CONSTRAINT fk_tiempo_proyecto
         FOREIGN KEY (proyecto_id) REFERENCES proyectos(id)
 ) ENGINE=InnoDB;
+
+USE ecotech_db;
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL, -- Aquí guardaremos el HASH, no la clave real
+    rol VARCHAR(20) DEFAULT 'user'  -- Roles: 'admin', 'user', 'invitado'
+);

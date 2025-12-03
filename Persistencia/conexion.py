@@ -4,8 +4,8 @@ from pymysql import Error
 class Conexion:
     def __init__(self):
         self.__host = "localhost"
-        self.__user = "fabian"
-        self.__password = "123456"
+        self.__user = "root"
+        self.__password = ""
         self.__db = "ecotech_db"
         self.conexion = None
 
