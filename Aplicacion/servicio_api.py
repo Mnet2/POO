@@ -7,16 +7,16 @@ class ServicioAPI:
 
     def obtener_indicadores(self):
         """
-        Consume una API REST externa (GET) para obtener valor del Dólar, UF y Euro.
-        Retorna un diccionario simplificado o None si falla.
+        Consume una API REST externa. 
+        Si falla por conexión o tiempo de espera, retorna DATOS SIMULADOS 
+        para asegurar que el sistema no se detenga.
         """
         try:
-           
-            respuesta = requests.get(self.url, timeout=5)
+            # Aumentamos el timeout a 10 segundos para dar más tiempo
+            respuesta = requests.get(self.url, timeout=10)
             
             if respuesta.status_code == 200:
                 data = respuesta.json()
-                
                 
                 fecha_raw = data['fecha'] 
                 fecha_bonita = datetime.strptime(fecha_raw[:10], "%Y-%m-%d").strftime("%d-%m-%Y")
@@ -29,13 +29,30 @@ class ServicioAPI:
                 }
                 return indicadores
             else:
-                print(f"Error en API: Código {respuesta.status_code}")
-                return None
+                print(f"⚠️ API respondió con código {respuesta.status_code}. Usando respaldo.")
+                return self._datos_simulados()
+
+        except requests.exceptions.Timeout:
+            print("⚠️ Tiempo de espera agotado (Timeout). Usando datos simulados...")
+            return self._datos_simulados()
 
         except requests.exceptions.RequestException as e:
-            
-            print(f"Error de conexión con la API externa: {e}")
-            return None
+            print(f"⚠️ Error de conexión con la API: {e}. Usando datos simulados...")
+            return self._datos_simulados()
+
         except Exception as e:
-            print(f"Error inesperado procesando datos: {e}")
-            return None
+            print(f"⚠️ Error inesperado: {e}. Usando datos simulados...")
+            return self._datos_simulados()
+
+    def _datos_simulados(self):
+        """
+        Genera valores fijos de respaldo.
+        Esto salva la presentación si no hay internet.
+        """
+        fecha_hoy = datetime.now().strftime("%d-%m-%Y")
+        return {
+            "fecha": f"{fecha_hoy} (Offline)",
+            "dolar": 985.50, # Valor aproximado realista
+            "uf": 36600.00,
+            "euro": 1050.20
+        }

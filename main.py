@@ -58,7 +58,7 @@ def main():
         limpiar_pantalla()
         print("="*40)
         print("      SISTEMA ECOTECH SOLUTIONS      ")
-        print("      (API Web corriendo en puerto 8000)      ") # Aviso visual
+        print("      (API Web corriendo en puerto 8000)      ")
         print("="*40)
         print(f"👤 Usuario: {usuario_actual.username} | 🔑 Rol: {usuario_actual.rol.upper()}")
         print("-" * 40)

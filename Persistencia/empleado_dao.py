@@ -1,3 +1,4 @@
+import pymysql # <--- Asegúrate de tener este import
 from Persistencia.conexion import Conexion
 from Dominio.empleado import Empleado
 
@@ -5,7 +6,7 @@ class EmpleadoDAO:
     def agregar(self, empleado):
         """
         Recibe un objeto Empleado y lo inserta en la base de datos.
-        Retorna True si la operación fue exitosa.
+        Maneja errores de duplicados y llaves foráneas.
         """
         sql = """
             INSERT INTO empleados (nombre, direccion, telefono, correo, fecha_contrato, salario, departamento_id)
@@ -32,10 +33,23 @@ class EmpleadoDAO:
                 
                 if cursor.lastrowid:
                     empleado.id = cursor.lastrowid
-                    
                 return True
+
+            except pymysql.err.IntegrityError as e:
+                # Error 1452: El Departamento ID no existe (Foreign Key Fails)
+                if e.args[0] == 1452:
+                    print(f"❌ Error: El Departamento con ID {empleado.departamento_id} no existe. Cree el departamento primero.")
+                
+                # Error 1062: Correo duplicado
+                elif e.args[0] == 1062:
+                    print(f"❌ Error: El correo '{empleado.correo}' ya está registrado en el sistema.")
+                
+                else:
+                    print(f"❌ Error de integridad en la base de datos: {e}")
+                return False
+
             except Exception as e:
-                print(f"Error al agregar empleado: {e}")
+                print(f"❌ Error inesperado al agregar empleado: {e}")
                 return False
             finally:
                 conexion_obj.desconectar()
@@ -62,7 +76,7 @@ class EmpleadoDAO:
                         direccion=fila[2],
                         telefono=fila[3],
                         correo=fila[4],
-                        fecha_contrato=fila[5],
+                        fecha_contrato=str(fila[5]), # Convertir fecha a string
                         salario=fila[6],
                         departamento_id=fila[7]
                     )
@@ -89,7 +103,7 @@ class EmpleadoDAO:
                 if fila:
                     resultado = Empleado(
                         id_emp=fila[0], nombre=fila[1], direccion=fila[2],
-                        telefono=fila[3], correo=fila[4], fecha_contrato=fila[5],
+                        telefono=fila[3], correo=fila[4], fecha_contrato=str(fila[5]),
                         salario=fila[6], departamento_id=fila[7]
                     )
             except Exception as e:
@@ -112,6 +126,9 @@ class EmpleadoDAO:
                 conn.commit()
                 if cursor.rowcount > 0:
                     exito = True
+            except pymysql.err.IntegrityError as e:
+                 # Error si intentas borrar un empleado que es jefe de un proyecto, etc.
+                print(f"❌ No se puede eliminar: El empleado está vinculado a otros registros.")
             except Exception as e:
                 print(f"Error al eliminar empleado: {e}")
             finally:
