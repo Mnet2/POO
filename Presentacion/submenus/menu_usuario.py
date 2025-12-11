@@ -1,55 +1,54 @@
-from Presentacion.utilidades import limpiar_pantalla, leer_entero
+from Presentacion.menu_base import MenuBase
+from Presentacion.utilidades import leer_entero, leer_texto
 from Aplicacion.reglas_usuario import ReglasUsuario
 
-class MenuUsuario:
+class MenuUsuario(MenuBase):
     def __init__(self):
+        super().__init__("Gestión de Usuarios (Admin)")
         self.reglas = ReglasUsuario()
 
-    def ejecutar(self):
-        while True:
-            limpiar_pantalla()
-            print("="*40)
-            print("      GESTIÓN DE USUARIOS (ADMIN)      ")
-            print("="*40)
-            print("1. Listar Usuarios")
-            print("2. Crear Nuevo Usuario")
-            print("3. Eliminar Usuario")
-            print("0. Volver al Menú Principal")
-            print("="*40)
-            
-            opcion = leer_entero("Seleccione una opción: ")
+    def mostrar_opciones(self):
+        print("1. Listar Usuarios")
+        print("2. Crear Nuevo Usuario")
+        print("3. Eliminar Usuario")
+        print("4. Editar Usuario") # <--- NUEVA OPCIÓN
+        print("0. Volver al Menú Principal")
 
-            if opcion == 1:
-                usuarios = self.reglas.listar_usuarios()
-                print("\n--- LISTA DE USUARIOS ---")
-                print(f"{'Usuario':<15} | {'Rol':<10}")
-                print("-" * 30)
-                for u in usuarios:
-                    print(f"{u['username']:<15} | {u['rol']:<10}")
-                input("\nPresione Enter para continuar...")
+    def procesar_opcion(self, opcion):
+        if opcion == 1:
+            self.listar_usuarios()
+        elif opcion == 2:
+            self.crear_usuario()
+        elif opcion == 3:
+            self.eliminar_usuario()
+        elif opcion == 4:
+            self.editar_usuario() # <--- LLAMADA
+        else:
+            print("Opción no válida.")
 
-            elif opcion == 2:
-                print("\n--- CREAR USUARIO ---")
-                username = input("Nuevo Username: ")
-                password = input("Nueva Contraseña: ")
-                rol = input("Rol (admin/empleado): ").lower()
-                
-                if self.reglas.crear_usuario(username, password, rol):
-                    print("✅ Usuario creado con éxito.")
-                else:
-                    print("❌ Error: El usuario ya existe o datos inválidos.")
-                input("Enter para continuar...")
+    # ... (Tus métodos de listar, crear y eliminar siguen igual) ...
 
-            elif opcion == 3:
-                print("\n--- ELIMINAR USUARIO ---")
-                username = input("Ingrese el username a eliminar: ")
-                if username == "admin":
-                    print("⛔ No puedes eliminar al administrador principal.")
-                elif self.reglas.eliminar_usuario(username):
-                    print("✅ Usuario eliminado.")
-                else:
-                    print("❌ Usuario no encontrado.")
-                input("Enter para continuar...")
+    def editar_usuario(self):
+        print("\n--- Editar Usuario ---")
+        username = leer_texto("Ingrese el Username del usuario a editar: ")
+        
+        # Verificamos visualmente si existe antes de pedir datos
+        # (Esto es opcional, pero ayuda a la experiencia de usuario)
+        if not self.reglas.dao.buscar_por_username(username):
+             print("❌ El usuario no existe.")
+             return
 
-            elif opcion == 0:
-                break
+        print("Deje el campo vacío y presione ENTER si no desea cambiar el valor.")
+        
+        nueva_pass = input("Nueva Contraseña (vacío para mantener la actual): ")
+        nuevo_rol = input("Nuevo Rol (admin/user) (vacío para mantener): ").lower()
+
+        confirmar = leer_texto("¿Guardar cambios? (s/n): ").lower()
+        if confirmar == 's':
+            exito, mensaje = self.reglas.editar_usuario(username, nueva_pass, nuevo_rol)
+            if exito:
+                print(f"✅ {mensaje}")
+            else:
+                print(f"❌ {mensaje}")
+        else:
+            print("Operación cancelada.")

@@ -1,3 +1,4 @@
+import pymysql 
 from Persistencia.conexion import Conexion
 from Dominio.proyecto import Proyecto
 from Dominio.empleado import Empleado
@@ -19,8 +20,17 @@ class ProyectoDAO:
                 if cursor.lastrowid:
                     proyecto.id = cursor.lastrowid
                 return True
+            
+            except pymysql.err.IntegrityError as e:
+                # Error 1452: Falla de llave foránea (El director_id no existe)
+                if e.args[0] == 1452:
+                    print(f"❌ Error: El ID de Director ({proyecto.director_id}) no existe en la tabla de empleados.")
+                else:
+                    print(f"Error de integridad al crear proyecto: {e}")
+                return False
+            
             except Exception as e:
-                print(f"Error al agregar proyecto: {e}")
+                print(f"Error desconocido al agregar proyecto: {e}")
                 return False
             finally:
                 conexion_obj.desconectar()
@@ -40,6 +50,7 @@ class ProyectoDAO:
                 cursor.execute(sql)
                 registros = cursor.fetchall()
                 for fila in registros:
+                    # Asegúrate de que tu constructor Proyecto coincida con este orden
                     proy = Proyecto(fila[0], fila[1], fila[2], fila[3], fila[4])
                     lista.append(proy)
             except Exception as e:
@@ -68,9 +79,11 @@ class ProyectoDAO:
                 conexion_obj.desconectar()
         return resultado
     
-
     def asignar_participante(self, proyecto_id, empleado_id):
-        """Agrega un empleado a la lista de participantes de un proyecto."""
+        """
+        Agrega un empleado a la lista de participantes de un proyecto.
+        Maneja errores si el ID no existe o si ya está asignado.
+        """
         sql = "INSERT INTO proyecto_participantes (proyecto_id, empleado_id) VALUES (%s, %s)"
         conexion_obj = Conexion()
         conn = conexion_obj.conectar()
@@ -81,8 +94,20 @@ class ProyectoDAO:
                 cursor.execute(sql, (proyecto_id, empleado_id))
                 conn.commit()
                 return True
+            
+            except pymysql.err.IntegrityError as e:
+                # Error 1452: Cannot add or update a child row (ID no existe)
+                if e.args[0] == 1452:
+                    print(f"❌ Error: No se puede asignar. El Proyecto ID {proyecto_id} o el Empleado ID {empleado_id} no existen.")
+                # Error 1062: Duplicate entry (Ya está asignado)
+                elif e.args[0] == 1062:
+                    print("❌ Error: Este empleado ya está asignado a este proyecto.")
+                else:
+                    print(f"Error de base de datos: {e}")
+                return False
+                
             except Exception as e:
-                print(f"Error al asignar participante: {e}")
+                print(f"Error inesperado al asignar participante: {e}")
                 return False
             finally:
                 conexion_obj.desconectar()
