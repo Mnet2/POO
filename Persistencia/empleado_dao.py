@@ -76,7 +76,7 @@ class EmpleadoDAO:
                         direccion=fila[2],
                         telefono=fila[3],
                         correo=fila[4],
-                        fecha_contrato=str(fila[5]), # Convertir fecha a string
+                        fecha_contrato=str(fila[5]), 
                         salario=fila[6],
                         departamento_id=fila[7]
                     )
